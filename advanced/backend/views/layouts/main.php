@@ -29,8 +29,10 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
+//        'brandLabel' => Yii::$app->name,
+        'brandLabel' => 'ltqyl',
+//        'brandUrl' => Yii::$app->homeUrl,
+        'brandUrl' => 'http://v3.bootcss.com/components/',
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
