@@ -123,9 +123,160 @@
 
 ### 要点难点及解决方案
 难点在于需要掌握实际工作中，如何分析思考业务功能，如何在已有知识积累的前提下搜索并解决实际问题，抓大放小，融会贯通，尤其要排除畏难情绪。
+
+
+
 ## 品牌功能模块
 ### 需求
 品牌管理功能涉及品牌的列表展示、品牌添加、修改、删除功能。
 品牌需要保存缩略图和简介。
 品牌删除使用逻辑删除。
-### 流程
+
+### 逻辑
+1、图片上传到七牛云
+    1)在composer packagist里下载图片上传组件，在params.php中进行配置
+    ```php
+    // 图片服务器的域名设置，拼接保存在数据库中的相对地址，可通过web进行展示
+        'domain' => '/',
+        'webuploader' => [
+            // 后端处理图片的地址，value 是相对的地址
+            'uploadUrl' => 'brand/upload',
+            // 多文件分隔符
+            'delimiter' => ',',
+            // 基本配置
+            'baseConfig' => [
+                'defaultImage' => 'http://img1.imgtn.bdimg.com/it/u=2056478505,162569476&fm=26&gp=0.jpg',
+                'disableGlobalDnd' => true,
+                'accept' => [
+                    'title' => 'Images',
+                    'extensions' => 'gif,jpg,jpeg,bmp,png',
+                    'mimeTypes' => 'image/*',
+                ],
+                'pick' => [
+                    'multiple' => false,
+                ],
+            ],
+        ],
+    ```
+    
+    ```php
+      public function actionUpload()
+        {
+            //var_dump($_FILES['file']['tmp_name']);exit;
+    //        配置
+            $config = [
+                'accessKey'=>'Hy-VyRINX9t6kU2TNURfGP1TYs6Xc0E_eg2lh81F',                      'secretKey'=>'kUU1g3oltnhBSR_knK7sDhrRUyYZWZ9gmP3GPhRd',
+                'domain'=>'http://oyvirytup.bkt.clouddn.com/',
+                'bucket'=>'yii2shop',
+                'area'=>Qiniu::AREA_HUANAN
+            ];
+    //        实例化对象
+            $qiniu = new Qiniu($config);
+            $key = time();
+    //        调用上传方法
+            $qiniu->uploadFile($_FILES['file']['tmp_name'],$key);
+            $url = $qiniu->getLink($key);
+    
+            $info=[
+                'code'=>0,
+                'url'=>$url,
+                'attachment'=>$url,
+            ];
+            //exit($url);
+            exit(json_encode($info));
+        }
+    ```
+### 问题
+1、在目录下下载composer插件不能成功
+  处理：在外部下好再复制进去
+2、上传图片是模型里未进行验证，导致图片上传不到数据库
+  处理：在模型里加权限验证
+
+# DAY2 
+## 文章功能
+### 需求
+文章表功能涉及品牌的列表展示、品牌添加、修改、删除功能。
+文章分类表功能涉及品牌的列表展示、品牌添加、修改、删除功能。
+文章内容表功能涉及品牌的列表展示、品牌添加、修改、删除功能。
+文章删除使用逻辑删除。
+
+## 流程
+1、通过数据迁移建立三张表
+2、显示列表功能
+3、处理增删查功能
+
+## 逻辑
+1、需要掌握到1对1/1对多关系
+   在控制器里得到1对1的数据和1对多的数据，再返回到视图，显示在列表    功能
+   ``php
+   1对1：
+   public function getCategory()
+       {
+           return $this->hasOne(ArticleCate::className(),   ['id'=>'cate_id']);
+       }
+   
+   1对多：
+   public function getArticle()
+       {
+           return $this->hasMany(Article::className(),['cate_id'=>'id']);
+       }
+   ``
+   
+2、需要掌握垂直分表的连表增加和删除以及内容回显功能
+   通过在文章控制器的添加和编辑方法里，同时添加两张表的数据和同时获   得到两张张的数据，再返回到视图页面
+   ```php
+   添加：
+    if($article->load($request->post()) && $article->validate()){
+               $article->save();
+   //            找出文章表对象
+               $articleDetail=new ArticleDetail();
+               $articleDetail->content=$article->content;
+               $articleDetail->article_id=$article->id;
+               $articleDetail->save();
+   
+   编辑：
+          $article=Article::findOne($id);
+          $article->content=ArticleDetail::findOne(['article_id'=>$id])->content;
+   if($article->load($request->post()) && $article->validate()){
+               $article->save();
+               $articleDetail=new ArticleDetail();
+               $articleDetail->content=$article->content;
+               $articleDetail->article_id=$article->id;
+               $articleDetail->save();
+       
+   ```
+3、软删除
+    ```php
+    /**
+         * 删除文章
+         * @param $id
+         */
+        public function actionDell($id)
+        {
+            if(Article::updateAll(['status'=>0],['id'=>$id])){
+                \Yii::$app->session->setFlash("success", "删除成功");
+                return $this->redirect(['article/index']);
+            }
+        }
+        
+        
+        /**
+             * 还原文章
+             * @param $id
+             * @return \yii\web\Response
+             */
+            public function actionReduction($id)
+            {
+                if(Article::updateAll(['status'=>1],['id'=>$id])){
+                    \Yii::$app->session->setFlash("success", "还原成功");
+                    return $this->redirect(['article/index']);
+                }
+            }
+            
+    ```
+
+
+
+
+
+

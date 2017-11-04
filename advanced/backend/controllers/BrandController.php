@@ -3,61 +3,12 @@
 namespace backend\controllers;
 
 use backend\models\Brand;
+use flyok666\qiniu\Qiniu;
 use yii\data\Pagination;
 use yii\web\UploadedFile;
-use xj\uploadify\UploadAction;
 
 class BrandController extends \yii\web\Controller
 {
-
-
-//    public function actions() {
-//        return [
-//            's-upload' => [
-//                'class' => UploadAction::className(),
-//                'basePath' => '@webroot/upload/brand',
-//                'baseUrl' => '@web/upload/brand',
-//                'enableCsrf' => true, // default
-//                'postFieldName' => 'Filedata', // default
-//                //BEGIN METHOD
-//                'format' => [$this, 'methodName'],
-//                //END METHOD
-//                //BEGIN CLOSURE BY-HASH
-//                'overwriteIfExist' => true,
-//                'format' => function (UploadAction $action) {
-//                    $fileext = $action->uploadfile->getExtension();
-//                    $filename = sha1_file($action->uploadfile->tempName);
-//                    return "{$filename}.{$fileext}";
-//                },
-//                //END CLOSURE BY-HASH
-//                //BEGIN CLOSURE BY TIME
-//                'format' => function (UploadAction $action) {
-//                    $fileext = $action->uploadfile->getExtension();
-//                    $filehash = sha1(uniqid() . time());
-//                    $p1 = substr($filehash, 0, 2);
-//                    $p2 = substr($filehash, 2, 2);
-//                    return "{$p1}/{$p2}/{$filehash}.{$fileext}";
-//                },
-//                //END CLOSURE BY TIME
-//                'validateOptions' => [
-//                    'extensions' => ['jpg', 'png'],
-//                    'maxSize' => 1 * 1024 * 1024, //file size
-//                ],
-//                'beforeValidate' => function (UploadAction $action) {
-//                    //throw new Exception('test error');
-//                },
-//                'afterValidate' => function (UploadAction $action) {},
-//                'beforeSave' => function (UploadAction $action) {},
-//                'afterSave' => function (UploadAction $action) {
-//                    $action->output['fileUrl'] = $action->getWebUrl();
-//                    $action->getFilename(); // "image/yyyymmddtimerand.jpg"
-//                    $action->getWebUrl(); //  "baseUrl + filename, /upload/image/yyyymmddtimerand.jpg"
-//                    $action->getSavePath(); // "/var/www/htdocs/upload/image/yyyymmddtimerand.jpg"
-//                },
-//            ],
-//        ];
-//    }
-
     /**
      * 商品列表
      * @return string
@@ -86,17 +37,19 @@ class BrandController extends \yii\web\Controller
     {
         $brand=new Brand();
         $request=\Yii::$app->request;
+
         if($brand->load($request->post())){
+            //var_dump($request->post());exit;
 //            创建图片上传对象
-            $brand->image=UploadedFile::getInstance($brand,'image');
+            //$brand->image=UploadedFile::getInstance($brand,'image');
 //            判断是否是图片文件
-            if($brand->image){
+            //if($brand->image){
 //                拼接路径
-                $filePath='images/'.time().rand(100,999).'.'.$brand->image->extension;
+                //$filePath='images/'.time().rand(100,999).'.'.$brand->image->extension;
 //                保存图片地址
-                $brand->image->saveAs($filePath,false);
-                $brand->logo=$filePath;
-            }
+                //$brand->image->saveAs($filePath,false);
+                //$brand->logo=$filePath;
+            //}
             if($brand->validate()){
 //                赋值给数据表的字段
                 $brand->save();
@@ -120,17 +73,17 @@ class BrandController extends \yii\web\Controller
             $request = \Yii::$app->request;
             if ($brand->load($request->post())) {
 //            创建图片上传对象
-                $brand->image = UploadedFile::getInstance($brand, 'image');
+                //$brand->image = UploadedFile::getInstance($brand, 'image');
 //            判断是否是图片文件
-                if ($brand->image) {
+                //if ($brand->image) {
 //                拼接路径
-                    $filePath = 'images/' . time() . rand(100, 999) . '.' . $brand->image->extension;
+                    //$filePath = 'images/' . time() . rand(100, 999) . '.' . $brand->image->extension;
 //                保存图片地址
-                    $brand->image->saveAs($filePath, false);
-                    $brand->logo = $filePath;
-                }else{
-                    $brand->logo=$img;
-                }
+                    //$brand->image->saveAs($filePath, false);
+                    //$brand->logo = $filePath;
+                //}else{
+                    //$brand->logo=$img;
+                //}
                 if ($brand->validate()) {
 //                赋值给数据表的字段
                     $brand->save();
@@ -143,7 +96,7 @@ class BrandController extends \yii\web\Controller
     }
 
     /**
-     * 删除品牌
+     * 彻底删除品牌
      * @param $id
      * @return \yii\web\Response
      */
@@ -155,6 +108,11 @@ class BrandController extends \yii\web\Controller
         }
     }
 
+    /**
+     * 删除品牌
+     * @param $id
+     * @return \yii\web\Response
+     */
     public function actionReclaim($id)
     {
         if (Brand::updateAll(['status' => -1], ['id' => $id])) {
@@ -163,17 +121,69 @@ class BrandController extends \yii\web\Controller
         }
     }
 
+    /**
+     * 显示回收站
+     * @return string
+     */
     public function actionReclaims()
     {
         $brands=Brand::find()->where(['status'=>"-1"])->all();
         return $this->render('reclaims',['brands'=>$brands]);
     }
 
+    /**
+     * 还原品牌
+     * @param $id
+     * @return \yii\web\Response
+     */
     public function actionReduction($id)
     {
         if (Brand::updateAll(['status' => 1], ['id' => $id])) {
             \Yii::$app->session->setFlash("success", "还原成功");
             return $this->redirect(['brand/reclaims']);
         }
+    }
+
+    /**
+     * 上传图片到七牛云
+     */
+    public function actionUpload()
+    {
+        //var_dump($_FILES['file']['tmp_name']);exit;
+//        配置
+        $config = [
+            'accessKey'=>'Hy-VyRINX9t6kU2TNURfGP1TYs6Xc0E_eg2lh81F',                      'secretKey'=>'kUU1g3oltnhBSR_knK7sDhrRUyYZWZ9gmP3GPhRd',
+            'domain'=>'http://oyvirytup.bkt.clouddn.com/',
+            'bucket'=>'yii2shop',
+            'area'=>Qiniu::AREA_HUANAN
+        ];
+//        实例化对象
+        $qiniu = new Qiniu($config);
+        $key = time();
+//        调用上传方法
+        $qiniu->uploadFile($_FILES['file']['tmp_name'],$key);
+        $url = $qiniu->getLink($key);
+
+        $info=[
+            'code'=>0,
+            'url'=>$url,
+            'attachment'=>$url,
+        ];
+        //exit($url);
+        exit(json_encode($info));
+    }
+
+    /**
+     * 删除七牛云图片
+     */
+    public function actionDelQi()
+    {
+        $qiNiu=new Qiniu($config = [
+            'accessKey'=>'Hy-VyRINX9t6kU2TNURfGP1TYs6Xc0E_eg2lh81F',                      'secretKey'=>'kUU1g3oltnhBSR_knK7sDhrRUyYZWZ9gmP3GPhRd',
+            'domain'=>'http://oyvirytup.bkt.clouddn.com/',
+            'bucket'=>'yii2shop',
+            'area'=>Qiniu::AREA_HUANAN
+        ]);
+        $qiNiu->delete('','yii2shop');
     }
 }

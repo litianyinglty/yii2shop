@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="yii2shop@localhost">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.2">
+    <root id="1"/>
+    <schema id="2" parent="1" name="yii2shop">
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </schema>
+    <schema id="3" parent="1" name="china"/>
+    <schema id="4" parent="1" name="ecshop"/>
+    <schema id="5" parent="1" name="haircut"/>
+    <schema id="6" parent="1" name="information_schema"/>
+    <schema id="7" parent="1" name="myshop"/>
+    <schema id="8" parent="1" name="mysql"/>
+    <schema id="9" parent="1" name="performance_schema"/>
+    <schema id="10" parent="1" name="phpcmsv9"/>
+    <schema id="11" parent="1" name="test"/>
+    <schema id="12" parent="1" name="unit"/>
+    <schema id="13" parent="1" name="yii2"/>
+    <table id="14" parent="2" name="article"/>
+    <table id="15" parent="2" name="article_cate"/>
+    <table id="16" parent="2" name="article_detail"/>
+    <table id="17" parent="2" name="brand"/>
+    <table id="18" parent="2" name="migration"/>
+    <table id="19" parent="2" name="user"/>
+    <column id="20" parent="14" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="21" parent="14" name="name">
+      <Position>2</Position>
+      <Comment>名称</Comment>
+      <DataType>varchar(60)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+    </column>
+    <column id="22" parent="14" name="up_author">
+      <Position>3</Position>
+      <Comment>更新作者</Comment>
+      <DataType>varchar(30)|0</DataType>
+    </column>
+    <column id="23" parent="14" name="author">
+      <Position>4</Position>
+      <Comment>作者</Comment>
+      <DataType>varchar(30)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;匿名&apos;</DefaultExpression>
+    </column>
+    <column id="24" parent="14" name="intro">
+      <Position>5</Position>
+      <Comment>简介</Comment>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="25" parent="14" name="cate_id">
+      <Position>6</Position>
+      <Comment>分类Id</Comment>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="26" parent="14" name="sort">
+      <Position>7</Position>
+      <Comment>排序</Comment>
+      <DataType>smallint(6)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;10&apos;</DefaultExpression>
+    </column>
+    <column id="27" parent="14" name="status">
+      <Position>8</Position>
+      <Comment>状态</Comment>
+      <DataType>smallint(1)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="28" parent="14" name="insert_time">
+      <Position>9</Position>
+      <Comment>插入时间</Comment>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="29" parent="14" name="update_time">
+      <Position>10</Position>
+      <Comment>修改时间</Comment>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <index id="30" parent="14" name="sort">
+      <ColNames>sort</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="31" parent="14" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="32" parent="14" name="sort">
+      <ColNames>sort</ColNames>
+      <UnderlyingIndexName>sort</UnderlyingIndexName>
+    </key>
+    <column id="33" parent="15" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="34" parent="15" name="name">
+      <Position>2</Position>
+      <Comment>文章分类名称</Comment>
+      <DataType>varchar(40)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+    </column>
+    <column id="35" parent="15" name="intro">
+      <Position>3</Position>
+      <Comment>分类简介</Comment>
+      <DataType>varchar(100)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="36" parent="15" name="sort">
+      <Position>4</Position>
+      <Comment>分类排序</Comment>
+      <DataType>smallint(6)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;5&apos;</DefaultExpression>
+    </column>
+    <column id="37" parent="15" name="is_heip">
+      <Position>5</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="38" parent="15" name="create_time">
+      <Position>6</Position>
+      <Comment>创建时间</Comment>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <index id="39" parent="15" name="sort">
+      <ColNames>sort</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="40" parent="15" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="41" parent="15" name="sort">
+      <ColNames>sort</ColNames>
+      <UnderlyingIndexName>sort</UnderlyingIndexName>
+    </key>
+    <column id="42" parent="16" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="43" parent="16" name="article_id">
+      <Position>2</Position>
+      <Comment>文章id</Comment>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="44" parent="16" name="content">
+      <Position>3</Position>
+      <Comment>文章内容</Comment>
+      <DataType>text|0</DataType>
+    </column>
+    <key id="45" parent="16" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="46" parent="17" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="47" parent="17" name="name">
+      <Position>2</Position>
+      <Comment>名称</Comment>
+      <DataType>varchar(30)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+    </column>
+    <column id="48" parent="17" name="intro">
+      <Position>3</Position>
+      <Comment>简介</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="49" parent="17" name="logo">
+      <Position>4</Position>
+      <Comment>图片</Comment>
+      <DataType>varchar(100)|0</DataType>
+    </column>
+    <column id="50" parent="17" name="sort">
+      <Position>5</Position>
+      <Comment>排序</Comment>
+      <DataType>smallint(6)|0</DataType>
+    </column>
+    <column id="51" parent="17" name="status">
+      <Position>6</Position>
+      <Comment>状态</Comment>
+      <DataType>smallint(6)|0</DataType>
+    </column>
+    <key id="52" parent="17" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="53" parent="18" name="version">
+      <Position>1</Position>
+      <DataType>varchar(180)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="54" parent="18" name="apply_time">
+      <Position>2</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <key id="55" parent="18" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>version</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="56" parent="19" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="57" parent="19" name="username">
+      <Position>2</Position>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="58" parent="19" name="auth_key">
+      <Position>3</Position>
+      <DataType>varchar(32)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="59" parent="19" name="password_hash">
+      <Position>4</Position>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="60" parent="19" name="password_reset_token">
+      <Position>5</Position>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="61" parent="19" name="email">
+      <Position>6</Position>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="62" parent="19" name="status">
+      <Position>7</Position>
+      <DataType>smallint(6)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;10&apos;</DefaultExpression>
+    </column>
+    <column id="63" parent="19" name="created_at">
+      <Position>8</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="64" parent="19" name="updated_at">
+      <Position>9</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="65" parent="19" name="email">
+      <ColNames>email</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="66" parent="19" name="password_reset_token">
+      <ColNames>password_reset_token</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="67" parent="19" name="username">
+      <ColNames>username</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="68" parent="19" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="69" parent="19" name="username">
+      <ColNames>username</ColNames>
+      <UnderlyingIndexName>username</UnderlyingIndexName>
+    </key>
+    <key id="70" parent="19" name="password_reset_token">
+      <ColNames>password_reset_token</ColNames>
+      <UnderlyingIndexName>password_reset_token</UnderlyingIndexName>
+    </key>
+    <key id="71" parent="19" name="email">
+      <ColNames>email</ColNames>
+      <UnderlyingIndexName>email</UnderlyingIndexName>
+    </key>
+  </database-model>
+</dataSource>

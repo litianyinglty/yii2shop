@@ -19,9 +19,10 @@
         <td><?=$brand->id?></td>
         <td><?=$brand->name?></td>
         <td><?=$brand->intro?></td>
-        <td><?=\yii\bootstrap\Html::img('/'.$brand->logo,['width'=>30,'height'=>30,'class'=>'img-circle'])?></td>
+        <td><?=\yii\bootstrap\Html::img($brand->image,['width'=>30,'height'=>30,'class'=>'img-circle'])?></td>
         <td><?=$brand->sort?></td>
-        <td><?=\backend\models\Brand::$statusArray[$brand->status];if([$brand->status])?></td><td>
+        <td><?=\backend\models\Brand::$statusArray[$brand->status]?></td>
+        <td>
             <?=\yii\bootstrap\Html::a("",['brand/edit','id'=>$brand->id],['class'=>'btn btn-info btn-xs glyphicon glyphicon-pencil'])?>
         <?=\yii\bootstrap\Html::a("",['brand/reclaim','id'=>$brand->id],['class'=>'btn btn-warning btn-xs glyphicon glyphicon-envelope'])?>
         </td>

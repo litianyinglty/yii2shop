@@ -21,7 +21,7 @@ class Brand extends \yii\db\ActiveRecord
      */
 //    设置属性
     public static $statusArray=['-1'=>'删除','0'=>'隐藏','1'=>'显示'];
-    public $image;
+    //public $image;
     public static function tableName()
     {
         return 'brand';
@@ -38,7 +38,7 @@ class Brand extends \yii\db\ActiveRecord
             [['sort', 'status'], 'integer'],
             [['name'], 'string', 'max' => 30],
             [['intro'], 'string', 'max' => 255],
-            [['image'],'file','extensions' =>['gif','jpg','png'],'skipOnEmpty' => true],
+            [['logo'],'safe'],
         ];
     }
 
@@ -52,9 +52,18 @@ class Brand extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => '名称',
             'intro' => '简介',
-            'image' => '图片',
+            'logo' => '图片',
             'sort' => '排序',
             'status' => '状态',
         ];
+    }
+
+    public function getImage()
+    {
+        if(substr($this->logo,0,7)=="http://"){
+            return $this->logo;
+        }else{
+            return '@web/'.$this->logo;
+        }
     }
 }
